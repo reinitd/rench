@@ -24,7 +24,7 @@ public static class Program
             warning += "    5. Reboot\n";
 
             Console.WriteLine(warning);
-            File.Create("./Rench.json");
+            RenchInfoService _ = new();
             return;
         }
 
@@ -42,6 +42,7 @@ public static class Program
             warning += "    4. Once GD has installed, go to your Google Drive in the file explorer (usually G:)\n";
             warning += "    5. Verify that the shared drive folder is in your Google Drive, you may have to scroll down since it's not technically a folder, and wont show at the top of the file explorer like folders do.\n";
             warning += "    6. If it isn't there, give GD time sync your files. If it is there, please re-run this application.\n";
+            warning += "\nIf you know you have Google Drive installed and all set-up, please run it (preferably set it to run on start-up) then re-run this application.\n";
 
             Console.WriteLine(warning);
 
