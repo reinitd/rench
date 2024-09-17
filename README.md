@@ -29,3 +29,7 @@ RenchRealms
 ```
 Inside the `.lock.json` file contains the user(s) playing and at what time they joined. \
 If the `.lock.json` file isn't present (meaning no one is in the realm), then Rench will have you turn on multipler hosting (friends can join) and create a lock file; any user that attempts to join will be asked to join the person playing on that save instead.
+
+### To-do
+- [ ] Backup-system
+- [ ] Entire thing
