@@ -117,10 +117,16 @@ public partial class Overlay : Form
 
         // REMINDER: Only open menu if Wrench is in focus.
         s = "Press 'R' to open the Rench menu.";
-        font = new("Inter", 20);
+        font = new Font("Inter", 20);
         brush = new SolidBrush(Color.White);
 
         textSize = g.MeasureString(s, font);
+
+        x = 10;
+        y = this.ClientSize.Height - textSize.Height - 10;
+
+        g.DrawString(s, font, brush, new PointF(x, y));
+
     }
 
 }
