@@ -103,7 +103,7 @@ public partial class Overlay : Form
     private void Overlay_Paint(object sender, PaintEventArgs e)
     {
         Graphics g = e.Graphics;
-        string s = "Rench Version 1.0";
+        string s = "Rench Version 0.1 [Alpha]";
         Font font = new Font("Inter", 12);
         Brush brush = new SolidBrush(Color.FromArgb(255, 145, 145, 145));
 
@@ -115,9 +115,21 @@ public partial class Overlay : Form
         g.DrawString(s, font, brush, new PointF(x, y));
 
 
+        string smallText = "Press 'Q' to close Rench";
+        Font smallFont = new Font("Inter", 11);
+        Brush smallBrush = new SolidBrush(Color.FromArgb(255, 145, 145, 145));
+
+        SizeF smallTextSize = g.MeasureString(smallText, smallFont);
+
+        float smallX = 12;
+        float smallY = this.ClientSize.Height - smallTextSize.Height - 10 - textSize.Height - 5;
+
+        g.DrawString(smallText, smallFont, smallBrush, new PointF(smallX, smallY));
+
+
         // REMINDER: Only open menu if Wrench is in focus.
-        s = "Press 'R' to open the Rench menu.";
-        font = new Font("Inter", 20);
+        s = "Press 'R' to open the Rench menu";
+        font = new Font("Inter", 14);
         brush = new SolidBrush(Color.White);
 
         textSize = g.MeasureString(s, font);
@@ -128,5 +140,4 @@ public partial class Overlay : Form
         g.DrawString(s, font, brush, new PointF(x, y));
 
     }
-
 }
