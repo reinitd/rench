@@ -2,30 +2,30 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using WrenchRealm.Models;
+using Rench.Models;
 
-namespace WrenchRealm.Helpers
+namespace Rench.Helpers
 {
     public class RenchInfoService
     {
-        public Rench? Info { get; private set; }
+        public RenchInfo Info { get; private set; }
         private const string FilePath = "./Rench.json";
 
         public RenchInfoService()
         {
             if (!File.Exists(FilePath))
             {
-                InitializeNewRench();
+                InitializeNewRenchForm();
             }
             else
             {
-                LoadExistingRench();
+                LoadExistingRenchForm();
             }
         }
 
-        private void InitializeNewRench()
+        private void InitializeNewRenchForm()
         {
-            Info = new Rench
+            Info = new RenchInfo
             {
                 FirstOpenTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                 PromptedToInstallGD = null,
@@ -37,23 +37,23 @@ namespace WrenchRealm.Helpers
             SaveToFile();
         }
 
-        private void LoadExistingRench()
+        private void LoadExistingRenchForm()
         {
             string fileContent = File.ReadAllText(FilePath);
-            Info = JsonConvert.DeserializeObject<Rench>(fileContent);
+            Info = JsonConvert.DeserializeObject<RenchInfo>(fileContent);
         }
 
-        public void Update(Rench updatedRench)
+        public void Update(RenchInfo updatedRenchForm)
         {
             EnsureFileExists();
-            Info = updatedRench;
+            Info = updatedRenchForm;
             SaveToFile();
         }
 
-        public async Task UpdateAsync(Rench updatedRench)
+        public async Task UpdateAsync(RenchInfo updatedRenchForm)
         {
             EnsureFileExists();
-            Info = updatedRench;
+            Info = updatedRenchForm;
             await SaveToFileAsync();
         }
 

@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 
-namespace WrenchRealm.Models;
-public class Rench {
+namespace Rench.Models;
+public class RenchInfo {
     [JsonProperty("first_open_time")]
     public long FirstOpenTime { get; set; }
     [JsonProperty("prompted_to_install_gd")]
