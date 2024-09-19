@@ -95,6 +95,7 @@ public partial class Overlay : Form
         this.Size = new Size(rect.right - rect.left, rect.bottom - rect.top);
         this.Top = rect.top;
         this.Left = rect.left;
+        // TODO: Resize Rench with Wrench.
 
         Console.WriteLine("Right: {0}, Left: {1}, Bottom: {2}, Top: {3}",
             rect.right.ToString(), rect.left.ToString(), rect.bottom.ToString(), rect.top.ToString());
@@ -102,6 +103,8 @@ public partial class Overlay : Form
 
     private void Overlay_Paint(object sender, PaintEventArgs e)
     {
+        // TODO: Only show the text if Wrench is in focus.
+
         Graphics g = e.Graphics;
         string s = "Rench Version 0.1 [Alpha]";
         Font font = new Font("Inter", 12);
@@ -127,7 +130,7 @@ public partial class Overlay : Form
         g.DrawString(smallText, smallFont, smallBrush, new PointF(smallX, smallY));
 
 
-        // REMINDER: Only open menu if Wrench is in focus.
+        // TODO: Only open menu if Wrench is in focus.
         s = "Press 'R' to open the Rench menu";
         font = new Font("Inter", 14);
         brush = new SolidBrush(Color.White);
