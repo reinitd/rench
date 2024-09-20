@@ -1,6 +1,6 @@
 ﻿namespace Rench;
 
-partial class Overlay
+class Overlay
 {
     /// <summary>
     ///  Required designer variable.

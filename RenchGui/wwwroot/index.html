@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RenchGui</title>
+    <link rel="stylesheet" href="styles/index.css" />
+    <script src="js/preCode.js"></script>
+</head>
+
+<body>
+    <div id="entry-screen">
+        <div id="interactive">
+            <!-- <p id="entry">🚪</p> -->
+            <!-- <p id="entry">🚗</p> -->
+            <img id="entry" src="assets/photos/racing-car.png" alt="🚗" width="25%" />
+            <small>(Click the car...)</small>
+        </div>
+    </div>
+    <div id="moving-background"></div>
+
+    <main id="main">
+        <pre id="ascii"><code>
+            ____              _   
+           | __ | ___ ___ ___| |_ 
+           |    \| -_|   |  _|   |
+           |__|__|___|_|_|___|_|_|
+       </code></pre>
+
+        <div id="options">
+            <p data-action="load_realm">Load Realm</p>
+            <p data-action="settings">Settings</p>
+            <p data-action="exit">Exit</p>
+        </div>
+
+        <footer>
+            <p>Made by <a class="dim" href="https://github.com/reinitd" target="_blank">reinitd</a>.</p>
+            <p>v0.1 [alpha]</p>
+        </footer>
+    </main>
+
+    <audio id="select-audio" src="assets/audio/tap-mellow.ogg"></audio>
+    <script src="app://dynamic.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            function callDotNet(message) {
+                console.log(`[Client] Sent .NET a message: ${message}`);
+                window.external.sendMessage(message);
+            }
+
+            const clickAudio = document.getElementById("select-audio");
+            const entry = document.getElementById("entry");
+            const entryScreen = document.getElementById("entry-screen");
+            const main = document.getElementById("main");
+
+            entry.addEventListener('click', async () => {
+                entry.style.animation = "slingshot-animation 1.5s ease-in-out forwards";
+                await new Promise(r => setTimeout(r, 900));
+                entryScreen.remove();
+
+                main.style.display = "flex";
+                main.style.animation = "grow .5s forwards";
+
+            });
+
+            const options = document.getElementById("options");
+            if (options) {
+                Array.from(options.children).forEach(option => {
+                    option.addEventListener('click', () => {
+                        clickAudio.play();
+                        callDotNet(JSON.stringify({
+                            action: option.getAttribute('data-action'),
+                            value: null
+                        }));
+                    });
+
+                    const aud = document.createElement('audio');
+                    aud.setAttribute('id', `for-${option.getAttribute('data-action')}`);
+                    aud.setAttribute('src', 'assets/audio/tap-toothy.ogg');
+
+                    option.addEventListener('mouseenter', () => {
+                        if (aud.paused) {
+                            aud.currentTime = 0;
+                            aud.play();
+                        } else {
+                            aud.play();
+                        }
+                    });
+                });
+            } else {
+                console.error("Element with ID 'options' not found.");
+            }
+        });
+
+
+
+        // window.external.receiveMessage(message => alert(message));
+    </script>
+</body>
+
+</html>

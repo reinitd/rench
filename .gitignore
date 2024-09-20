@@ -2,3 +2,6 @@ bin/
 obj/
 Rench.json
 .vs
+
+RenchGui/bin
+RenchGui/obj

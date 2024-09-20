@@ -6,7 +6,7 @@ using Size = System.Drawing.Size;
 
 namespace Rench;
 
-public partial class Overlay : Form
+public class Overlay : Form
 {
     // Thank you: https://www.youtube.com/watch?v=t1ErGj0YnaM
     // Thank you for the patch: https://pastebin.com/yd1MTHkX
