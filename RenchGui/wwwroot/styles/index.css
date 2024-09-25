@@ -1,95 +1,38 @@
-:root {
-    --c-bg: black;
-    --c-text: whitesmoke;
-    --c-text-light-dim: rgb(130, 130, 130);
-    --c-text-dim: rgb(100, 100, 100);
-    --c-anchor: rgb(200, 200, 200);
-    --c-anchor-dim: rgb(150, 150, 150);
-    --c-hover: rgba(0, 0, 0, .5);
-}
-
-html,
-body {
-    height: 100%;
-    margin: 0;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    user-select: none;
-}
-
-body {
-    padding: 1em;
-    color: var(--c-text);
-    background-color: var(--c-bg);
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 15px;
-    font-weight: normal;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
-main {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    display: none;
-}
-
-#ascii {
-    width: min-content;
-    font-weight: bold;
-}
+@import url(animations.css);
 
 #options {
     height: 100%;
     max-height: 100%;
     max-width: 100%;
     width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     padding: 1em;
     gap: .1rem;
-}
-
-#options p {
-    white-space: nowrap;
-    /* margin: 0.5rem 0; */
-    width: 100%;
-    text-align: center;
-    padding: .25rem;
-    cursor: pointer;
-}
-
-#options p:hover {
-    background-color: var(--c-hover);
 }
 
 footer {
     font-family: monospace;
     color: var(--c-text-dim);
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
     display: inline-flex;
-    justify-content: space-between;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
     font-size: .75rem;
     width: 100%;
-}
-
-a {
-    color: var(--c-anchor);
-}
-
-a.dim {
-    color: var(--c-anchor-dim);
 }
 
 #entry-screen {
@@ -98,10 +41,19 @@ a.dim {
     left: 0;
     width: 100%;
     height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     /* background-color: black; */
     background-color: transparent;
     z-index: 2;
@@ -111,16 +63,23 @@ a.dim {
     z-index: 4;
     height: 100%;
     width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
 }
 
 #entry-screen #interactive #entry {
     font-size: 3.5rem;
     cursor: pointer;
     margin-bottom: 1.5rem;
-    animation: shake 2s infinite alternate;
+    -webkit-animation: shake 2s infinite alternate;
+            animation: shake 2s infinite alternate;
     /* animation: slingshot-animation 1.5s ease-in-out forwards; */
 }
 
@@ -131,86 +90,11 @@ a.dim {
     left: 50%;
     bottom: 1rem;
     opacity: 0;
-    transform: translateX(-50%);
-    animation: fadeIn 1s forwards;
-    animation-delay: 5s;
-}
-
-#moving-background {
-    z-index: -1;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: .25;
-    background-image: url('../assets/photos/wrench.png');
-    background-repeat: repeat;
-    background-size: 50px 50px;
-    animation: move-background 45s linear infinite;
-}
-
-@keyframes move-background {
-    0% {
-        background-position: 0 100%;
-    }
-    100% {
-        background-position: 100% 0;
-    }
-}
-
-@keyframes slingshot-animation {
-    0% {
-        transform: translateX(0);
-    }
-    40% {
-        transform: translateX(30px);
-    }
-    60% {
-        transform: translateX(-300%);
-    }
-    100% {
-        transform: translateX(-300%);
-    }
-}
-
-@keyframes fadeIn {
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes shake {
-    0%, 100% {
-        transform: translateX(0);
-    }
-    25% {
-        transform: translateX(-5px);
-    }
-    50% {
-        transform: translateX(5px);
-    }
-    75% {
-        transform: translateX(-5px);
-    }
-}
-
-@keyframes fadeOutLeft {
-    0% {
-        opacity: 1;
-        transform: translateX(0);
-    }
-    100% {
-        opacity: 0;
-        transform: translateX(-100%);
-    }
-}
-
-@keyframes grow {
-    0% {
-        transform: scale(0.25);
-    }
-    100% {
-        transform: scale(1);
-    }
+    -webkit-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+            transform: translateX(-50%);
+    -webkit-animation: fadeIn 1s forwards;
+            animation: fadeIn 1s forwards;
+    -webkit-animation-delay: 5s;
+            animation-delay: 5s;
 }

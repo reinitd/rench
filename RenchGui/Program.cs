@@ -11,6 +11,27 @@ class Program
     [STAThread]
     static void Main(string[] args)
     {
+        string configPath = "missing";
+        foreach (var arg in args)
+        {
+            if (arg.StartsWith("--config="))
+            {
+                string configValue = arg.Split('=')[1];
+                configPath = configValue;
+
+            }
+        }
+
+        if (configPath == "missing") {
+            Console.WriteLine("Please pass in the config path.\n\n  --config=../rench.json");
+            return;
+        }
+
+        if (!File.Exists(configPath)) {
+            Console.WriteLine("Config file at the specified path does not exist!");
+            return;
+        }
+
         string windowTitle = "RenchGui";
 
         var window = new PhotinoWindow()
@@ -38,12 +59,15 @@ class Program
                     // "window.external.receiveMessage(callback: Function)"
                     // window.SendWebMessage(response);
 
-                    ResponseManager.Handle(window, message);
+                    ResponseManager.Handle(window, message, configPath);
                 }
             )
             .Load("wwwroot/index.html");
 
-        
+        // TODO: Find a fix for MacOS not being centered vertically.
+        // Point pt = window.Location;
+        // window.SetLocation(new Point(pt.X, pt.Y - 1000));
+
         window.WaitForClose();
     }
 }

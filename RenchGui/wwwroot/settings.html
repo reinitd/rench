@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -7,39 +7,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RenchGui</title>
     <link rel="stylesheet" href="styles/global.css" />
-    <link rel="stylesheet" href="styles/index.css" />
+    <link rel="stylesheet" href="styles/loadrealm.css" />
     <script src="js/preCode.js"></script>
 </head>
 
 <body>
-    <div id="entry-screen">
-        <div id="interactive">
-            <!-- <p id="entry">🚪</p> -->
-            <!-- <p id="entry">🚗</p> -->
-            <img id="entry" src="assets/photos/racing-car.png" alt="🚗" width="25%" />
-            <small>(Click the car...)</small>
-        </div>
-    </div>
     <div id="moving-background"></div>
 
-    <main id="main">
+    <header id="primary">
         <pre id="ascii"><code>
             ____              _   
            | __ | ___ ___ ___| |_ 
            |    \| -_|   |  _|   |
            |__|__|___|_|_|___|_|_|
        </code></pre>
-
-        <div id="options">
-            <button data-action="set_window_size" data-value="700x500" data-goto="loadrealm.html">Load Realm</button>
-            <button data-action="set_window_size" data-value="500x700" data-goto="settings.html">Settings</button>
+        <span>
+            <button data-action="set_window_size" data-value="300x300"
+                data-goto="index.html?dontShowSplash=true">Back</button>
             <button data-action="exit">Exit</button>
-        </div>
+        </span>
+    </header>
 
-        <footer>
-            <p>Made by <a class="dim" href="https://github.com/reinitd" target="_blank">reinitd</a>.</p>
-            <p>v0.1 [alpha]</p>
-        </footer>
+    <main id="main">
+        <div id="loading-container">
+            <div id="loading-spinner"></div>
+        </div>
     </main>
 
     <audio id="select-audio" src="assets/audio/tap-mellow.mp3"></audio>
@@ -53,25 +45,8 @@
             }
 
             const clickAudio = document.getElementById("select-audio");
-            const entry = document.getElementById("entry");
-            const entryScreen = document.getElementById("entry-screen");
             const main = document.getElementById("main");
-
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('dontShowSplash') == 'true') {
-                entryScreen.remove();
-                main.style.display = "flex";
-            } else {
-
-                entry.addEventListener('click', async () => {
-                    entry.style.animation = "slingshot-animation 1.5s ease-in-out forwards";
-                    await new Promise(r => setTimeout(r, 900));
-                    entryScreen.remove();
-
-                    main.style.display = "flex";
-                    main.style.animation = "grow .5s forwards";
-                });
-            }
+            const loadingContainer = document.getElementById("loading-container");
 
             const options = document.querySelectorAll('[data-action]');
 
@@ -108,8 +83,18 @@
                 console.error("No elements with 'data-action' attribute found.");
             }
 
-        });
+            // callDotNet(JSON.stringify({
+            //     action: 'get_config',
+            //     value: null
+            // }));
 
+            // window.external.receiveMessage(message => handleGetConfigResponse(message));
+
+            // function handleGetConfigResponse(msg) {
+
+            //     loadingContainer.remove();
+            // }
+        });
 
 
         // window.external.receiveMessage(message => alert(message));
