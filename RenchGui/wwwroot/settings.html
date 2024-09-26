@@ -107,12 +107,11 @@
                     error.innerHTML = `<p>${response.message}</p>`;
                     elements.main.appendChild(error);
                     elements.loadingContainer.remove();
+                    elements.settingsDiv.remove();
                     return;
                 }
 
                 cfg = response.value;
-                elements.loadingContainer.remove();
-                elements.settingsDiv.style.display = 'flex';
 
                 const gdRealmPathMissing = document.getElementById("js-gd-realm-path-missing");
                 const wrenchSavePathMissing = document.getElementById("js-wrench-save-path-missing");
@@ -126,6 +125,9 @@
                     gdRealmPathMissing.remove();
                     elements.gdRealmPathField.value = cfg.gd_realm_path;
                 }
+
+                elements.loadingContainer.remove();
+                elements.settingsDiv.style.display = 'flex';
             };
 
             window.external.receiveMessage(handleGetConfigResponse);
@@ -144,6 +146,25 @@
                     action: 'update_config',
                     value: JSON.stringify(cfg)
                 }));
+
+                window.external.receiveMessage(handleUpdateConfigResponse);
+                function handleUpdateConfigResponse(msg) {
+                    const r = JSON.parse(msg);
+                    const rv = JSON.parse(r.value);
+                    if (r.action != "update_config_response") {
+                        return;
+                    }
+
+                    if (!rv.success) {
+                        const error = document.createElement("div");
+                        error.innerHTML = `<p>${rv.message}</p>`;
+                        elements.main.appendChild(error);
+                        elements.settingsDiv.remove();
+                        return;
+                    }
+
+                    window.location.replace("settings.html");
+                }
             };
         });
     </script>

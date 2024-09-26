@@ -13,6 +13,9 @@ public static class ResponseManager {
             Console.WriteLine("Resp is null.");
             return;
         }
+        if (resp.Action == null) {
+            return;
+        }
 
         switch (resp.Action.ToLower()) {
             case "exit":
@@ -30,6 +33,10 @@ public static class ResponseManager {
             case "get_config":
                 GetConfig gc = new(window, configPath);
                 gc.Handle(resp);
+                break;
+            case "update_config":
+                UpdateConfig uc = new(window, configPath);
+                uc.Handle(resp);
                 break;
             default:
                 Console.WriteLine($"Unknown action: {resp.Action.ToLower()}");

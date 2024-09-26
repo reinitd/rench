@@ -38,6 +38,12 @@ public class GetRealms(PhotinoWindow window, string configPath) : IAction
             return;
         }
 
+        if (cfg.WrenchSavePath == null) {
+            result.Message = "Please go to the settings tab and set the path for your Wrench save folder.";
+            _com.Send(response, result);
+            return;
+        }
+
         _com.Send(response, result);
     }
 
