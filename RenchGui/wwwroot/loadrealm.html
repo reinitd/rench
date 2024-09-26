@@ -39,48 +39,43 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            function callDotNet(message) {
+            const callDotNet = message => {
                 console.log(`[Client] Sent .NET a message: ${message}`);
                 window.external.sendMessage(message);
-            }
+            };
 
-            const clickAudio = document.getElementById("select-audio");
-            const main = document.getElementById("main");
-            const loadingContainer = document.getElementById("loading-container");
+            const elements = {
+                clickAudio: document.getElementById("select-audio"),
+                main: document.getElementById("main"),
+                loadingContainer: document.getElementById("loading-container")
+            };
 
-            const options = document.querySelectorAll('[data-action]');
+            const buttons = document.querySelectorAll('button');
 
-            if (options.length > 0) {
-                options.forEach(option => {
-                    option.addEventListener('click', async () => {
-                        await clickAudio.play();
+            if (buttons.length === 0) {
+                console.error("No buttons found.");
+            } else {
+                buttons.forEach(button => {
+                    button.addEventListener('click', async () => {
+                        await elements.clickAudio.play();
                         callDotNet(JSON.stringify({
-                            action: option.getAttribute('data-action'),
-                            value: option.getAttribute('data-value')
+                            action: button.dataset.action,
+                            value: button.dataset.value
                         }));
 
-                        const goto = option.getAttribute('data-goto');
-                        if (goto != null) {
+                        const goto = button.dataset.goto;
+                        if (goto) {
                             window.location.replace(goto);
                         }
                     });
 
-                    const aud = document.createElement('audio');
-                    aud.setAttribute('id', `for-${option.getAttribute('data-action')}`);
-                    aud.setAttribute('src', 'assets/audio/tap-toothy.mp3');
-                    aud.load();
+                    const aud = new Audio('assets/audio/tap-toothy.mp3');
 
-                    option.addEventListener('mouseenter', async () => {
-                        if (aud.paused) {
-                            aud.currentTime = 0;
-                            await aud.play();
-                        } else {
-                            await aud.play();
-                        }
+                    button.addEventListener('mouseenter', () => {
+                        aud.currentTime = 0;
+                        aud.play();
                     });
                 });
-            } else {
-                console.error("No elements with 'data-action' attribute found.");
             }
 
             callDotNet(JSON.stringify({
@@ -88,30 +83,25 @@
                 value: null
             }));
 
-            window.external.receiveMessage(message => handleGetRealmsResponse(message));
+            const handleGetRealmsResponse = msg => {
+                const { action, value } = JSON.parse(msg);
 
-            function handleGetRealmsResponse(msg) {
-                const m = JSON.parse(msg);
-                const v = JSON.parse(m.value);
-
-                if (m.action != "get_realms_response") {
+                if (action !== "get_realms_response") {
                     return;
                 }
 
-                if (!v.success) {
+                const response = JSON.parse(value);
+
+                if (!response.success) {
                     const error = document.createElement("div");
-                    const p = document.createElement("p");
-                    p.textContent = v.message;
-
-                    error.appendChild(p);
-                    main.appendChild(error);
-                    loadingContainer.remove();
-                    return;
+                    error.innerHTML = `<p>${response.message}</p>`;
+                    elements.main.appendChild(error);
                 }
 
-                loadingContainer.remove();
-            }
+                elements.loadingContainer.remove();
+            };
 
+            window.external.receiveMessage(handleGetRealmsResponse);
         });
 
 

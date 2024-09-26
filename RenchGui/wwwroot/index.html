@@ -30,9 +30,9 @@
            |__|__|___|_|_|___|_|_|
        </code></pre>
 
-        <div id="options">
+        <div id="buttons">
             <button data-action="set_window_size" data-value="700x500" data-goto="loadrealm.html">Load Realm</button>
-            <button data-action="set_window_size" data-value="500x700" data-goto="settings.html">Settings</button>
+            <button data-action="set_window_size" data-value="700x300" data-goto="settings.html">Settings</button>
             <button data-action="exit">Exit</button>
         </div>
 
@@ -47,72 +47,61 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            function callDotNet(message) {
+            const callDotNet = message => {
                 console.log(`[Client] Sent .NET a message: ${message}`);
                 window.external.sendMessage(message);
-            }
+            };
 
-            const clickAudio = document.getElementById("select-audio");
-            const entry = document.getElementById("entry");
-            const entryScreen = document.getElementById("entry-screen");
-            const main = document.getElementById("main");
+            const elements = {
+                clickAudio: document.getElementById("select-audio"),
+                entry: document.getElementById("entry"),
+                entryScreen: document.getElementById("entry-screen"),
+                main: document.getElementById("main")
+            };
 
             const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('dontShowSplash') == 'true') {
-                entryScreen.remove();
-                main.style.display = "flex";
+            if (urlParams.get('dontShowSplash') === 'true') {
+                elements.entryScreen.remove();
+                elements.main.style.display = "flex";
             } else {
-
-                entry.addEventListener('click', async () => {
-                    entry.style.animation = "slingshot-animation 1.5s ease-in-out forwards";
+                elements.entry.addEventListener('click', async () => {
+                    elements.entry.style.animation = "slingshot-animation 1.5s ease-in-out forwards";
                     await new Promise(r => setTimeout(r, 900));
-                    entryScreen.remove();
-
-                    main.style.display = "flex";
-                    main.style.animation = "grow .5s forwards";
+                    elements.entryScreen.remove();
+                    elements.main.style.display = "flex";
+                    elements.main.style.animation = "grow .5s forwards";
                 });
             }
 
-            const options = document.querySelectorAll('[data-action]');
+            const buttons = document.querySelectorAll('button');
 
-            if (options.length > 0) {
-                options.forEach(option => {
-                    option.addEventListener('click', async () => {
-                        await clickAudio.play();
-                        callDotNet(JSON.stringify({
-                            action: option.getAttribute('data-action'),
-                            value: option.getAttribute('data-value')
-                        }));
-
-                        const goto = option.getAttribute('data-goto');
-                        if (goto != null) {
-                            window.location.replace(goto);
-                        }
-                    });
-
-                    const aud = document.createElement('audio');
-                    aud.setAttribute('id', `for-${option.getAttribute('data-action')}`);
-                    aud.setAttribute('src', 'assets/audio/tap-toothy.mp3');
-                    aud.load();
-
-                    option.addEventListener('mouseenter', async () => {
-                        if (aud.paused) {
-                            aud.currentTime = 0;
-                            await aud.play();
-                        } else {
-                            await aud.play();
-                        }
-                    });
-                });
-            } else {
-                console.error("No elements with 'data-action' attribute found.");
+            if (buttons.length === 0) {
+                console.error("No buttons found.");
+                return;
             }
 
+            buttons.forEach(button => {
+                const hoverAudio = new Audio('assets/audio/tap-toothy.mp3');
+
+                button.addEventListener('click', async () => {
+                    await elements.clickAudio.play();
+                    callDotNet(JSON.stringify({
+                        action: button.dataset.action,
+                        value: button.dataset.value
+                    }));
+
+                    const goto = button.dataset.goto;
+                    if (goto) {
+                        window.location.replace(goto);
+                    }
+                });
+
+                button.addEventListener('mouseenter', () => {
+                    hoverAudio.currentTime = 0;
+                    hoverAudio.play();
+                });
+            });
         });
-
-
-
-        // window.external.receiveMessage(message => alert(message));
     </script>
 </body>
 

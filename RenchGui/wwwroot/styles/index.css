@@ -1,6 +1,6 @@
 @import url(animations.css);
 
-#options {
+#buttons {
     height: 100%;
     max-height: 100%;
     max-width: 100%;
@@ -97,4 +97,9 @@ footer {
             animation: fadeIn 1s forwards;
     -webkit-animation-delay: 5s;
             animation-delay: 5s;
+}
+
+main {
+    height: 100%;
+    flex-grow: 1;
 }

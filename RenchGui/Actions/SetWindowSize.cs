@@ -1,8 +1,4 @@
-using System;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using Newtonsoft.Json;
 using PhotinoNET;
 using RenchGui.Models;
 
@@ -19,7 +15,6 @@ public class SetWindowSize(PhotinoWindow window) : IAction
     {
         string[] s = message.Value.Split("x");
         Size size = new(int.Parse(s[0]), int.Parse(s[1]));
-        Console.WriteLine(size.ToString());
         _window.SetSize(size);
         _window.Center();
     }

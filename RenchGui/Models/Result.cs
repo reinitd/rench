@@ -28,6 +28,7 @@ public class Result
 
 public class Result<T> : Result
 {
+    [JsonProperty("value")]
     public T Value { get; set; }
 
     public Result(bool success, string message, T value) : base(success, message)

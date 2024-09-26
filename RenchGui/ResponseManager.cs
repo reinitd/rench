@@ -7,7 +7,6 @@ using RenchGui.Actions;
 namespace RenchGui;
 
 public static class ResponseManager {
-
     public static void Handle(PhotinoWindow window, string msg, string configPath) {
         Message? resp = JsonConvert.DeserializeObject<Message>(msg);
         if (resp == null) {
@@ -27,6 +26,10 @@ public static class ResponseManager {
             case "get_realms":
                 GetRealms gr = new(window, configPath);
                 gr.Handle(resp);
+                break;
+            case "get_config":
+                GetConfig gc = new(window, configPath);
+                gc.Handle(resp);
                 break;
             default:
                 Console.WriteLine($"Unknown action: {resp.Action.ToLower()}");

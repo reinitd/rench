@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RenchGui</title>
     <link rel="stylesheet" href="styles/global.css" />
-    <link rel="stylesheet" href="styles/loadrealm.css" />
+    <link rel="stylesheet" href="styles/settings.css" />
     <script src="js/preCode.js"></script>
 </head>
 
@@ -32,6 +32,21 @@
         <div id="loading-container">
             <div id="loading-spinner"></div>
         </div>
+        <div id="settings">
+            <div id="fields">
+                <label>
+                    Google Drive Realm Path <span id="js-gd-realm-path-missing" style="color: red;">&mdash;
+                        MISSING!</span>
+                    <input type="text" id="field-gd-realm-path" placeholder="Ex. G:\My Drive\RenchRealms" />
+                </label>
+                <label>
+                    Wrench Save Path <span id="js-wrench-save-path-missing" style="color: red;">&mdash; MISSING!</span>
+                    <input type="text" id="field-wrench-save-path"
+                        placeholder="Ex. C:\Users\USER\AppData\Local\WrenchGame\Saved\SaveGames" />
+                </label>
+                <button id="save-settings">Save</button>
+            </div>
+        </div>
     </main>
 
     <audio id="select-audio" src="assets/audio/tap-mellow.mp3"></audio>
@@ -39,65 +54,98 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            function callDotNet(message) {
+            const callDotNet = message => {
                 console.log(`[Client] Sent .NET a message: ${message}`);
                 window.external.sendMessage(message);
+            };
+
+            const elements = {
+                clickAudio: document.getElementById("select-audio"),
+                main: document.getElementById("main"),
+                loadingContainer: document.getElementById("loading-container"),
+                settingsDiv: document.getElementById("settings"),
+                saveSettings: document.getElementById("save-settings"),
+                gdRealmPathField: document.getElementById("field-gd-realm-path"),
+                wrenchSavePathField: document.getElementById("field-wrench-save-path")
+            };
+
+            const buttons = document.querySelectorAll('button');
+            if (buttons.length === 0) {
+                console.error("No buttons found.");
+                return;
             }
 
-            const clickAudio = document.getElementById("select-audio");
-            const main = document.getElementById("main");
-            const loadingContainer = document.getElementById("loading-container");
+            buttons.forEach(button => {
+                button.addEventListener('click', async () => {
+                    await elements.clickAudio.play();
+                    callDotNet(JSON.stringify({
+                        action: button.dataset.action,
+                        value: button.dataset.value
+                    }));
 
-            const options = document.querySelectorAll('[data-action]');
-
-            if (options.length > 0) {
-                options.forEach(option => {
-                    option.addEventListener('click', async () => {
-                        await clickAudio.play();
-                        callDotNet(JSON.stringify({
-                            action: option.getAttribute('data-action'),
-                            value: option.getAttribute('data-value')
-                        }));
-
-                        const goto = option.getAttribute('data-goto');
-                        if (goto != null) {
-                            window.location.replace(goto);
-                        }
-                    });
-
-                    const aud = document.createElement('audio');
-                    aud.setAttribute('id', `for-${option.getAttribute('data-action')}`);
-                    aud.setAttribute('src', 'assets/audio/tap-toothy.mp3');
-                    aud.load();
-
-                    option.addEventListener('mouseenter', async () => {
-                        if (aud.paused) {
-                            aud.currentTime = 0;
-                            await aud.play();
-                        } else {
-                            await aud.play();
-                        }
-                    });
+                    if (button.dataset.goto) {
+                        window.location.replace(button.dataset.goto);
+                    }
                 });
-            } else {
-                console.error("No elements with 'data-action' attribute found.");
-            }
 
-            // callDotNet(JSON.stringify({
-            //     action: 'get_config',
-            //     value: null
-            // }));
+                const aud = new Audio('assets/audio/tap-toothy.mp3');
+                button.addEventListener('mouseenter', () => {
+                    aud.currentTime = 0;
+                    aud.play();
+                });
+            });
 
-            // window.external.receiveMessage(message => handleGetConfigResponse(message));
+            let cfg;
 
-            // function handleGetConfigResponse(msg) {
+            const handleGetConfigResponse = msg => {
+                const { action, value } = JSON.parse(msg);
+                if (action !== "get_config_response") return;
 
-            //     loadingContainer.remove();
-            // }
+                const response = JSON.parse(value);
+                if (!response.success) {
+                    const error = document.createElement("div");
+                    error.innerHTML = `<p>${response.message}</p>`;
+                    elements.main.appendChild(error);
+                    elements.loadingContainer.remove();
+                    return;
+                }
+
+                cfg = response.value;
+                elements.loadingContainer.remove();
+                elements.settingsDiv.style.display = 'flex';
+
+                const gdRealmPathMissing = document.getElementById("js-gd-realm-path-missing");
+                const wrenchSavePathMissing = document.getElementById("js-wrench-save-path-missing");
+
+                if (cfg.wrench_save_path) {
+                    wrenchSavePathMissing.remove();
+                    elements.wrenchSavePathField.value = cfg.wrench_save_path;
+                }
+
+                if (cfg.gd_realm_path) {
+                    gdRealmPathMissing.remove();
+                    elements.gdRealmPathField.value = cfg.gd_realm_path;
+                }
+            };
+
+            window.external.receiveMessage(handleGetConfigResponse);
+
+            callDotNet(JSON.stringify({ action: 'get_config', value: null }));
+
+            elements.saveSettings.onclick = () => {
+                if (!elements.gdRealmPathField.value.trim() || !elements.wrenchSavePathField.value.trim()) {
+                    alert("Values must not be missing.");
+                    return;
+                }
+
+                cfg.gd_realm_path = elements.gdRealmPathField.value.trim();
+                cfg.wrench_save_path = elements.wrenchSavePathField.value.trim();
+                callDotNet(JSON.stringify({
+                    action: 'update_config',
+                    value: JSON.stringify(cfg)
+                }));
+            };
         });
-
-
-        // window.external.receiveMessage(message => alert(message));
     </script>
 </body>
 

@@ -23,7 +23,7 @@ class Program
         }
 
         if (configPath == "missing") {
-            Console.WriteLine("Please pass in the config path.\n\n  --config=../rench.json");
+            Console.WriteLine("Please pass in the config path.\n\n  Ex: --config=../rench.json");
             return;
         }
 

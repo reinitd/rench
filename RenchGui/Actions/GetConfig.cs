@@ -1,17 +1,14 @@
-using System;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using Newtonsoft.Json;
 using PhotinoNET;
 using RenchGui.Models;
 using RenchGui.Helpers;
+using Newtonsoft.Json;
 
 namespace RenchGui.Actions;
 
-public class GetRealms(PhotinoWindow window, string configPath) : IAction
+public class GetConfig(PhotinoWindow window, string configPath) : IAction
 {
-    public string ActionName { get; } = "get_realms";
+    public string ActionName { get; } = "get_config";
     private readonly PhotinoWindow _window = window;
     private readonly string _configPath = configPath;
     private readonly Communication _com = new(window);
@@ -19,9 +16,10 @@ public class GetRealms(PhotinoWindow window, string configPath) : IAction
 
     public void Handle(Message message)
     {
-        Result<string[]?> result = new(false, "An unknown error occured.", null);
-        Message response = new(){
-            Action = "get_realms_response",
+        Result<Config?> result = new(false, "An unknown error occured.", null);
+        Message response = new()
+        {
+            Action = "get_config_response",
             Value = null
         };
 
@@ -32,11 +30,10 @@ public class GetRealms(PhotinoWindow window, string configPath) : IAction
             return;
         }
 
-        if (cfg.GDRealmPath == null) {
-            result.Message = "Please go to the settings tab and set the path to your Google Drive realm folder.";
-            _com.Send(response, result);
-            return;
-        }
+
+        result.Success = true;
+        result.Message = "OK";
+        result.Value = cfg;
 
         _com.Send(response, result);
     }
