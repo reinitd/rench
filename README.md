@@ -3,17 +3,17 @@
 RenchForm is for the game Wrench. The purpose of this application is to allow for easy Realm-like saves for the game. \
 RenchForm currently only supports Wrench Beta on PC, not on the Oculus (unless of course you're using the Oculus from your PC in Steam's VR mode).
 
-RenchForm uses Google Drive and Google Drive for Desktop to sync the realm(s) across all clients. The file structure should look like this, `RenchFormRealms` is the folder that is in Google Drive: \
+RenchForm uses Google Drive and Google Drive for Desktop to sync the realm(s) across all clients. The file structure should look like this, `RenchRealms` is the folder that is in Google Drive: \
 **NOTE:** You shouldn't touch the files directly unless you know what you're doing, you should be doing everything through RenchForm.
 ```
-RenchFormRealms
+RenchRealms
 └── Realm Name
     └── Sandbox.sav
 ```
 
 An example below:
 ```
-RenchFormRealms
+RenchRealms
 └── CommunitySandbox
 │   └── CommunitySandbox.sav
 └── TestSandbox
@@ -22,7 +22,7 @@ RenchFormRealms
 
 If someone is playing in `CommunitySandbox`, there will be a `CommunitySandbox.lock.json` file present:
 ```
-RenchFormRealms
+RenchRealms
 └── CommunitySandbox
     └── CommunitySandbox.sav
     └── CommunitySandbox.lock.json
